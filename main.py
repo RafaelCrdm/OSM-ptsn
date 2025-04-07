@@ -1,5 +1,4 @@
 import requests
-from shapely.geometry import Point, LineString
 from time import sleep
 
 # Open Street Maps Geocoding API endpoint
@@ -8,7 +7,7 @@ GEOCODING_API_URL = "https://nominatim.openstreetmap.org/reverse"
 
 def geocode_reverse(lat, lon, cache={}):
     """
-    Consulta geocodificação reversa da API OpenStreetMap, com cache.
+    Consulta geocodificação reversa da API OpenStreetMap, com cache para evitar múltiplas chamadas.
     """
     sleep(1)  # Pausa para respeitar a política de uso da API
     if (lat, lon) in cache:
@@ -23,78 +22,59 @@ def geocode_reverse(lat, lon, cache={}):
     if response.status_code == 200:
         try:
             data = response.json()
-            address = data.get('address', {})
-            road = address.get('road')
-            if road:
-                cache[(lat, lon)] = address
-                return address
+            road = data.get('address', {}).get('road')
+            cache[(lat, lon)] = road
+            return road
         except ValueError:
             pass
     return None
 
 
-def is_valid_street(address):
+def get_correct_route(points):
     """
-    Verifica se o endereço é válido e elimina somente cruzamentos explícitos.
-    """
-    if not address:
-        return None
+    Obtém as ruas do trajeto real do veículo, ignorando nomes de ruas inadequados ou cruzamentos.
 
-    road_name = address.get('road', '')
-
-    # Ignorar cruzamentos explícitos com " e " ou "&"
-    if ' e ' in road_name.lower() or '&' in road_name:
-        return None
-
-    # Retorna o nome da rua se for válido
-    return road_name
-
-
-def get_street_itinerary(points):
-    """
-    Obtém o nome das ruas que fazem parte do itinerário do ônibus.
-    :param points: Lista de pontos (longitude, latitude)
-    :return: Lista com nomes das ruas únicas no itinerário
+    :param points: Lista de coordenadas (longitude, latitude)
+    :return: Lista de nomes das ruas pelas quais o veículo realmente passou.
     """
     previous_street = None
     street_names = []
+    for i, (lon, lat) in enumerate(points):
+        road_name = geocode_reverse(lat, lon)  # Consulta a rua utilizando geocodificação reversa
 
-    for lon, lat in points:
-        # Obtém o endereço via geocodificação reversa
-        address = geocode_reverse(lat, lon)
-
-        # Depuração: log para entender o que a API retorna
-        if address:
-            print(f"Endereço retornado para ({lat}, {lon}): {address}")
-        else:
-            print(f"Nenhum endereço retornado para ({lat}, {lon})")
-
-        # Validar se é uma rua válida e relevante
-        road_name = is_valid_street(address)
-
+        # Verifica se o ponto está consistente com as ruas anteriores/subsequentes
         if road_name:
-            print(f"Rua válida identificada: {road_name}")
-        else:
-            print(f"Rua ignorada para o ponto ({lat}, {lon})")
+            # Checar cruzamentos com base na sequência (descarta ruas não consistentes)
+            if i > 0 and i < len(points) - 1:  # Ponto intermediário
+                previous_point_street = street_names[-1] if len(street_names) > 0 else None
+                next_point_road = geocode_reverse(points[i + 1][1], points[i + 1][0])
 
-        # Adiciona rua ao itinerário apenas se for diferente da anterior
-        if road_name and road_name != previous_street:
-            street_names.append(road_name)
-            previous_street = road_name
+                # Se a rua atual diverge de ambas (anterior e posterior), ignora
+                if road_name != previous_point_street and road_name != next_point_road:
+                    print(f"Ignorando rua {road_name} em ({lat}, {lon}): possível cruzamento inconsistente.")
+                    continue
+
+            # Adiciona a rua ao itinerário
+            if road_name != previous_street:  # Nome da rua mudou
+                street_names.append(road_name)
+                previous_street = road_name
 
     return street_names
 
 
-# Exemplo de Itinerário com Coordenadas (longitude, latitude)
+# Coordenadas do itinerário
 route_coordinates = [
     (-43.181245, -22.901718),  # Avenida Presidente Vargas
-    (-43.18125, -22.90172),  # Avenida Presidente Vargas (repetido próximo)
-    (-43.18158, -22.90182),  # Cruzamento (ignorar Marechal Floriano)
+    (-43.18125, -22.90172),  # Avenida Presidente Vargas
+    (-43.18158, -22.90182),  # Cruzamento: ignorar Marechal Floriano
+    (-43.18214, -22.90096),  # Cruzamento: retornar Rua Uruguaiana
     (-43.18213, -22.90089),  # Rua Uruguaiana
+    (-43.18204, -22.90069),  # Rua Uruguaiana
     (-43.18177, -22.90003),  # Rua Acre
-    (-43.18177, -22.900029),  # Rua Acre (repetida)
+    (-43.18177, -22.900029),  # Rua Acre (repetido)
+    (-43.181057, -22.898303),  # Rua Acre
 ]
 
 # Processa os nomes das ruas do itinerário
-street_names = get_street_itinerary(route_coordinates)
+street_names = get_correct_route(route_coordinates)
 print("Ruas percorridas no itinerário:", " | ".join(street_names))

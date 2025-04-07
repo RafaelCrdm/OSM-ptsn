@@ -1,0 +1,101 @@
+RELATÓRIO DE ROTAS PARA ÔNIBUS
+===============================
+
+Arquivo GeoJSON processado: teste.geojson
+Total de ruas adequadas: 13
+
+DETALHES DO TRAJETO:
+--------------------
+
+1. Avenida João Luís Alves
+   Tipo de via: unknown
+   Extensão: 1001 metros
+   Segmentos: 1, 2
+   Início: -22.94339, -43.16082
+   Fim: -22.9478962648772, -43.1650050593131
+
+2. Avenida Portugal
+   Tipo de via: unknown
+   Extensão: 501 metros
+   Segmentos: 3
+   Início: -22.9478962648772, -43.1650050593131
+   Fim: -22.9510694413963, -43.1682803258957
+
+3. Rua Osório de Almeida
+   Tipo de via: unknown
+   Extensão: 501 metros
+   Segmentos: 4
+   Início: -22.9510694413963, -43.1682803258957
+   Fim: -22.9540588522434, -43.1686146299094
+
+4. Avenida Pasteur
+   Tipo de via: unknown
+   Extensão: 500 metros
+   Segmentos: 5
+   Início: -22.9540588522434, -43.1686146299094
+   Fim: -22.952405734155, -43.1731281675495
+
+5. Ciclovia Mané Garrincha
+   Tipo de via: unknown
+   Extensão: 500 metros
+   Segmentos: 6
+   Início: -22.952405734155, -43.1731281675495
+   Fim: -22.9501022468863, -43.1772977636144
+
+6. Avenida Pasteur
+   Tipo de via: unknown
+   Extensão: 500 metros
+   Segmentos: 7
+   Início: -22.9501022468863, -43.1772977636144
+   Fim: -22.950252605868, -43.1815061980017
+
+7. Praia de Botafogo
+   Tipo de via: unknown
+   Extensão: 1003 metros
+   Segmentos: 8, 9
+   Início: -22.950252605868, -43.1815061980017
+   Fim: -22.9421048878637, -43.1795875810362
+
+8. Avenida Rui Barbosa
+   Tipo de via: unknown
+   Extensão: 1501 metros
+   Segmentos: 10, 11, 12
+   Início: -22.9421048878637, -43.1795875810362
+   Fim: -22.9371890327639, -43.173171209659
+
+9. Praia do Flamengo
+   Tipo de via: unknown
+   Extensão: 1177 metros
+   Segmentos: 13, 14, 15
+   Início: -22.9371890327639, -43.173171209659
+   Fim: -22.9270042929996, -43.173264380564
+
+10. Avenida Beira-Mar
+   Tipo de via: unknown
+   Extensão: 2006 metros
+   Segmentos: 16, 17, 18, 19
+   Início: -22.9270042929996, -43.173264380564
+   Fim: -22.911180525864, -43.1717139665576
+
+11. Avenida Presidente Antônio Carlos
+   Tipo de via: unknown
+   Extensão: 1003 metros
+   Segmentos: 20, 21
+   Início: -22.911180525864, -43.1717139665576
+   Fim: -22.9029951835298, -43.1754005341183
+
+12. Avenida Presidente Vargas
+   Tipo de via: unknown
+   Extensão: 1500 metros
+   Segmentos: 22, 23, 24
+   Início: -22.9029951835298, -43.1754005341183
+   Fim: -22.9038077047269, -43.1877106019287
+
+13. Terminal Rodoviário Procópio Ferreira
+   Tipo de via: unknown
+   Extensão: 499 metros
+   Segmentos: 25
+   Início: -22.9038077047269, -43.1877106019287
+   Fim: -22.90501, -43.19231
+
+OBS: Foram filtradas ciclovias, vias pedestres e outros tipos inadequados.
